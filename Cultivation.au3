@@ -31,8 +31,8 @@ Global $healKey = "q"
 Global $guiHeight = 100
 Global $guiWidth = 400
 
-Global $harvestReadyPath = @ScriptDir & "\Images\harvest_ready.bmp"
-Global $startHarvestPath = @ScriptDir & "\Images\start_harvest.bmp"
+Global $harvestReadySeedPath = @ScriptDir & "\Images\harvest_ready_seed.bmp"
+Global $harvestReadySporePath = @ScriptDir & "\Images\harvest_ready_spore.bmp"
 
 Global $inCombat = false
 Global $logHwnd = GUICreate("Log Text Region",400,50,(@DesktopWidth / 2) - 200, 100,$WS_POPUP,BitOR($WS_EX_TOPMOST,$WS_EX_TOOLWINDOW))
@@ -62,37 +62,29 @@ Main()
 
 Func Update()
 
-   If WinActive($windowTitle, "") Then
-	  ; Warhammer Window active.
-		;GUICtrlSetData($status, "Status:  Active")
-	  Sleep(250)
-   Else
+   If Not WinActive($windowTitle, "") Then
 	  ; Warhammer Window not active.
 	  GUICtrlSetData($status, "Status:  Waiting For Window")
-	  Sleep(250)
 	  Return
    EndIf
 
-   Local $harvestReadyFound = _ImageSearch($harvestReadyPath, $searchTolerance)
+   Sleep(250)
+   GUICtrlSetData($status, "Status:  Waiting For Harvest")
+   CheckHarvest($harvestReadySeedPath)
+   CheckHarvest($harvestReadySporePath)
 
+EndFunc
 
+Func CheckHarvest($path)
+   Local $found = False
+   Local $harvestReadyFound = _ImageSearch($path, $searchTolerance)
    If $harvestReadyFound[0] == 1 Then
+	  $found = True
 	  ; Click Harvest.
 	  ClickHarvest($harvestReadyFound[1], $harvestReadyFound[2])
-	  Sleep(3000)
-   Else
-	  Local $startHarvestFound = _ImageSearch($startHarvestPath, $searchTolerance)
-	  ; No target.
-	  If $startHarvestFound[0] == 1 Then
-		 StartHarvest($startHarvestFound[1], $startHarvestFound[2])
-		 Sleep(250)
-	  Else
-		 GUICtrlSetData($status, "Status:  Waiting For Harvest")
-		 Sleep(250)
-	  EndIf
+	  Sleep(1000)
    EndIf
-
-
+   return $found
 EndFunc
 
 Func StartHarvest($x, $y)
