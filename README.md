@@ -1,3 +1,3 @@
-# eso-assist
+# warhammer-assist
 
-Helper tool for assisting with playing the Elder Scrolls Online
+Helper tool for assisting with playing Warhammer: Age of Reckoning
